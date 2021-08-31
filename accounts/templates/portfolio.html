@@ -1,0 +1,223 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<style>
+body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	background: linear-gradient(45deg, #49a09d, #5f2c82);
+	font-family: sans-serif;
+	font-weight: bold;
+}
+
+.container {
+	position: absolute;
+	top: 60%;
+	left: 57%;
+	transform: translate(-60%, -50%);
+}
+
+table {
+	width: 1100px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+th,
+td {
+	padding: 15px;
+	background-color: rgba(255,255,255,0.2);
+	color: #fff;
+    font-size: 25px;
+}
+
+th {
+	text-align: left;
+}
+
+thead {
+	th {
+		background-color: #55608f;
+	}
+}
+
+tbody {
+	tr {
+		&:hover {
+			background-color: rgba(255,255,255,0.3);
+		}
+	}
+	td {
+		position: relative;
+		&:hover {
+			&:before {
+				content: "";
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: -9999px;
+				bottom: -9999px;
+				background-color: rgba(255,255,255,0.2);
+				z-index: -1;
+			}
+		}
+	}
+}
+.header {
+  padding: 60px;
+  text-align: center;
+  color: rgb(153, 170, 153);
+  font-size: 80px;
+}
+
+.para {
+  padding: -20px;
+  text-align: center;
+  color: rgb(255, 255, 255);
+  font-size: 30px;
+}
+.para1 {
+  padding: -20px;
+  text-align: center;
+  color: rgb(96, 190, 77);
+  font-size: 15px;
+}
+
+</style>
+<!-- ------HTML----- -->
+<br>
+<div class="header">
+    <p>Portfolio </p>
+</div>
+<div class="para">
+    <p>{{request.user.username}}</p>
+    <p>Cash: ${{CurrentTrader.cash}}</p>
+    <p>AUM: ${{CurrentTrader.AUM}}</p>
+</div>
+<div class="para1">
+    <p>*AUM=Assets under management</p>
+</div>
+
+<div class="container">
+	<table>
+		<thead>
+			<tr>
+				<th>Ticker</th>
+				<th>Count </th>
+				<th>Share Price</th>
+				<th>Position Value</th>
+				<th>Sell Shares</th>
+			</tr>
+		</thead>
+		<tbody>
+            {% for position in PositionsArray %}
+			<tr>
+				<td>{{position.ticker}}</td>
+				<td>{{position.count}}</td>
+				<td>${{position.price}}</td>
+				<td>${{position.value}}</td>
+				<td class="text-center">
+                    <form method="POST" class="form-inline my-2 my-lg-0" action="/accounts/sell/">
+                        {% csrf_token %}
+                        <input class="form-control mr-sm-2" type="number" pattern="^[0-9]" min="1" step="1"
+                            placeholder="Sell Shares" aria-label="Sell Shares" name="ShareCount" value=1>
+                        <input type="hidden" name="TickerName" value={{position.ticker}}>
+                        <button class="btn btn-light" type="submit">Sell</button>
+                    </form>
+                </td>
+    
+			</tr>
+            {% endfor %}
+		</tbody>
+	</table>
+</div>
+
+
+<!-- ------NaveBar -->
+
+
+
+<html>
+
+<head>
+
+</head>
+
+<body class="bg-transparent">
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <script>
+            alert("{{message}}")
+        </script>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-primary">
+        <a class="navbar-brand text-light">CLB Trading</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <form method="POST" class="form-inline my-2 my-lg-0" action="/search/">
+                {% csrf_token %}
+                <input class="form-control mr-sm-2" type="search" placeholder="Search Stock" aria-label="Search Ticker"
+                    name="ticker">
+                <input type="hidden" name="graphTime" value=0>
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+
+            <ul class="navbar-nav ml-auto">
+
+
+                <li class="nav-item active">
+                    <a class="nav-link text-light" href="/News/">News <span
+                            class="sr-only">(current)</span></a>
+                </li>
+
+                <li class="nav-item active">
+                    <a class="nav-link text-light" href="/leaderboard/">Leaderboard <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link text-light" href="/accounts/portfolio/">Portfolio <span
+                            class="sr-only">(current)</span></a>
+                </li>
+
+                <li class="nav-item active">
+                    <a class="nav-link text-light" href="/accounts/account_settings/">Settings <span
+                            class="sr-only">(current)</span></a>
+                </li>
+
+                <li class="nav-item active">
+                    <a class="nav-link text-light" href="/accounts/logout/">Logout <span
+                            class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    {% block content %}{% endblock content %}
+</body>
+
+</html>

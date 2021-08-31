@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<br>
+<br>
+
+
+
+<div class="container">
+<div class="row">
+    {% for x in api.articles %}
+
+        <div class="card text-white bg-dark mb-3" style="width: 18rem;">
+            <img src="https://content.fortune.com/wp-content/uploads/2019/10/GettyImages-1158402857.jpg?resize=750,500" 
+            class="card-img-top" alt="{{x.source.name}}">
+            <div class="card-body">
+                <h5 class="card-title">{{x.title}}</h5>
+                    <p class="card-text">{{x.description|truncatechars:150}}</p>
+                <a href="{{x.url}}" target="_blank" class="btn btn-primary">Read More</a>
+            </div>
+         </div>    
+    
+    {%endfor%}
+</div>
+</div>
+
+
+{% endblock %}

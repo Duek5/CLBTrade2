@@ -1,1 +1,1 @@
-web: gunicorn clbtrade.wsgi
+web: gunicorn CLBTrade.wsgi
